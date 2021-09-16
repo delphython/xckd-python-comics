@@ -10,12 +10,12 @@ def get_random_comic(url):
     response = requests.get(url)
     response.raise_for_status()
 
-    comics_info = response.json()
-    last_comics_number = comics_info["num"]
+    comic_info = response.json()
+    last_comic_number = comic_info["num"]
 
-    random_comics_number = random.randint(1,last_comics_number)
+    random_comic_number = random.randint(1,last_comic_number)
 
-    return f"https://xkcd.com/{random_comics_number}/info.0.json"
+    return f"https://xkcd.com/{random_comic_number}/info.0.json"
 
 
 def get_image_info(url, params=None):
