@@ -127,13 +127,13 @@ def main():
     comic_url = "https://xkcd.com/info.0.json"
     token_version = "5.131"
     vk_group_id = 207191194
-    image_file_name = "comic.png"
 
     vk_token = os.environ["VK_API_KEY"]
 
     image_info = get_image_info(get_random_comic(comic_url))
     image_url = image_info["img"]
     image_comment = image_info["alt"]
+    image_file_name = get_file_name(image_url)
     image_dir = os.getcwd()
     image_path = os.path.join(image_dir, image_file_name)
 
