@@ -6,6 +6,14 @@ import requests
 from dotenv import load_dotenv
 
 
+def get_file_name(url):
+    parsed_url = urlparse(url)
+    path = unquote(parsed_url.path)
+    *arg, file_name = os.path.split(path)
+
+    return file_name
+
+
 def get_random_comic(url):
     response = requests.get(url)
     response.raise_for_status()
