@@ -116,14 +116,14 @@ def publish_image_to_vk(save_response_info, image_comment, vk_group_id, token,
 def main():
     load_dotenv()
 
-    comics_url = "https://xkcd.com/info.0.json"
+    comic_url = "https://xkcd.com/info.0.json"
     token_version = "5.131"
     vk_group_id = 207191194
-    image_file_name = "comics.png"
+    image_file_name = "comic.png"
 
     vk_token = os.environ["VK_API_KEY"]
 
-    image_info = get_image_info(get_random_comic(comics_url))
+    image_info = get_image_info(get_random_comic(comic_url))
     image_url = image_info["img"]
     image_comment = image_info["alt"]
     image_dir = os.getcwd()
