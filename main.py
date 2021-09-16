@@ -6,7 +6,7 @@ import requests
 from dotenv import load_dotenv
 
 
-def get_random_comics(url):
+def get_random_comic(url):
     response = requests.get(url)
     response.raise_for_status()
 
@@ -123,7 +123,7 @@ def main():
 
     vk_token = os.environ["VK_API_KEY"]
 
-    image_info = get_image_info(get_random_comics(comics_url))
+    image_info = get_image_info(get_random_comic(comics_url))
     image_url = image_info["img"]
     image_comment = image_info["alt"]
     image_dir = os.getcwd()
