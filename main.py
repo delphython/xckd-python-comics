@@ -52,7 +52,7 @@ def get_vk_upload_server_info(vk_group_id, token, token_version):
       "group_id": vk_group_id,
     }
 
-    response = requests.get(vk_api_url, params=params)
+    response = requests.post(vk_api_url, params=params)
     response.raise_for_status()
 
     return response.json()["response"]
