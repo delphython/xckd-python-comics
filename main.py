@@ -59,7 +59,7 @@ def get_vk_upload_server_info(vk_group_id, token, token_version):
 
 
 def upload_image_to_vk(vk_upload_server_info, image_path, vk_group_id, token,
-    token_version):
+                       token_version):
     upload_url = vk_upload_server_info["upload_url"]
 
     with open(image_path, 'rb') as image_file:
@@ -100,7 +100,7 @@ def save_image_to_vk(upload_response_info, vk_group_id, token, token_version):
 
 
 def publish_image_to_vk(save_response_info, image_comment, vk_group_id, token,
-    token_version):
+                        token_version):
     vk_publish_image_url = "https://api.vk.com/method/wall.post"
     post_from_group = 1
 
