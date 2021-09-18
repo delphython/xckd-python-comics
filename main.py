@@ -21,7 +21,7 @@ def get_random_comic(url):
     comic_info = response.json()
     last_comic_number = comic_info["num"]
 
-    random_comic_number = random.randint(1,last_comic_number)
+    random_comic_number = random.randint(1, last_comic_number)
 
     return f"https://xkcd.com/{random_comic_number}/info.0.json"
 
