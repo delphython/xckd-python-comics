@@ -14,16 +14,16 @@ def get_file_name(url):
     return file_name
 
 
-def get_random_comic(url):
+def get_random_comic_number(url):
     response = requests.get(url)
     response.raise_for_status()
 
     comic_info = response.json()
     last_comic_number = comic_info["num"]
 
-    random_comic_number = random.randint(1, last_comic_number)
+    return random.randint(1, last_comic_number)
 
-    return f"https://xkcd.com/{random_comic_number}/info.0.json"
+    # return
 
 
 def get_image_info(url, params=None):
@@ -130,7 +130,10 @@ def main():
 
     vk_token = os.environ["VK_API_KEY"]
 
-    image_info = get_image_info(get_random_comic(comic_url))
+    random_comic = get_random_comic_number(comic_url)
+    random_comic_url = f"https://xkcd.com/{random_comic}/info.0.json"
+
+    image_info = get_image_info(random_comic_url)
     image_url = image_info["img"]
     image_comment = image_info["alt"]
     image_file_name = get_file_name(image_url)
