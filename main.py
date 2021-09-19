@@ -14,8 +14,10 @@ def get_file_name(url):
     return file_name
 
 
-def get_random_comic_number(url):
-    response = requests.get(url)
+def get_random_comic_number():
+    comic_url = "https://xkcd.com/info.0.json"
+
+    response = requests.get(comic_url)
     response.raise_for_status()
 
     comic_metadata = response.json()
@@ -116,13 +118,12 @@ def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
 def main():
     load_dotenv()
 
-    comic_url = "https://xkcd.com/info.0.json"
     api_version = "5.131"
 
     vk_group_id = os.environ["VK_GROUP_ID"]
     vk_token = os.environ["VK_API_KEY"]
 
-    random_comic = get_random_comic_number(comic_url)
+    random_comic = get_random_comic_number()
     random_comic_url = f"https://xkcd.com/{random_comic}/info.0.json"
 
     image_metadata = get_image_metadata(random_comic_url)
