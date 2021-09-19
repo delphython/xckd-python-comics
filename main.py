@@ -56,9 +56,8 @@ def get_vk_upload_server_metadata(vk_group_id, token, token_version):
     return response.json()["response"]
 
 
-def upload_image_to_vk(vk_upload_server_metadata, image_path, vk_group_id,
+def upload_image_to_vk(upload_url, image_path, vk_group_id,
                        token, token_version):
-    upload_url = vk_upload_server_metadata["upload_url"]
 
     with open(image_path, 'rb') as image_file:
         files = {
@@ -146,8 +145,10 @@ def main():
             vk_group_id, vk_token,
             token_version
         )
+        upload_url = vk_upload_server_metadata["upload_url"]
+
         vk_upload_response_metadata = upload_image_to_vk(
-            vk_upload_server_metadata,
+            upload_url,
             image_path,
             vk_group_id,
             vk_token,
