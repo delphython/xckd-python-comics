@@ -98,8 +98,8 @@ def save_image_to_vk(upload_response_metadata, vk_group_id, token,
     return response.json()["response"][0]
 
 
-def publish_image_to_vk(save_response_metadata, image_comment, vk_group_id, token,
-                        token_version):
+def publish_image_to_vk(save_response_metadata, image_comment, vk_group_id,
+                        token, token_version):
     vk_publish_image_url = "https://api.vk.com/method/wall.post"
     post_from_group = 1
 
