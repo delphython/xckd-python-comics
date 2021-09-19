@@ -19,6 +19,11 @@ pip install -r requirements.txt
     ```
     export VK_API_KEY="cd111111a8dde5abb20d65a2222b50eebdf3333333f03022e25007baea82860a444444444c086eb4cd8c"
     ```
+4. You have to set VK_GROUP_ID environment variable before use script:
+To get VKontakte group id use this [instruction](https://regvk.com/id/). Copy your VKontakte group id to .env file:
+```
+export VK_GROUP_ID="123456789"
+```
 
 ## Usage
 
