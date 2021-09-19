@@ -125,8 +125,8 @@ def main():
 
     comic_url = "https://xkcd.com/info.0.json"
     token_version = "5.131"
-    vk_group_id = 207191194
 
+    vk_group_id = os.environ["VK_GROUP_ID"]
     vk_token = os.environ["VK_API_KEY"]
 
     random_comic = get_random_comic_number(comic_url)
