@@ -117,7 +117,7 @@ def main():
     load_dotenv()
 
     comic_url = "https://xkcd.com/info.0.json"
-    token_version = "5.131"
+    api_version = "5.131"
 
     vk_group_id = os.environ["VK_GROUP_ID"]
     vk_token = os.environ["VK_API_KEY"]
@@ -137,7 +137,7 @@ def main():
     try:
         vk_upload_server_metadata = get_vk_upload_server_metadata(
             vk_group_id, vk_token,
-            token_version
+            api_version
         )
         upload_url = vk_upload_server_metadata["upload_url"]
 
@@ -146,7 +146,7 @@ def main():
             image_path,
             vk_group_id,
             vk_token,
-            token_version
+            api_version
         )
         uploaded_server = vk_upload_response_metadata["server"]
         uploaded_image = vk_upload_response_metadata["photo"]
@@ -158,7 +158,7 @@ def main():
             uploaded_hash,
             vk_group_id,
             vk_token,
-            token_version
+            api_version
         )
         vk_owner_id = vk_save_response_metadata["owner_id"]
         uploaded_image_id = vk_save_response_metadata["id"]
@@ -169,7 +169,7 @@ def main():
             image_comment,
             vk_group_id,
             vk_token,
-            token_version
+            api_version
         )
 
     finally:
