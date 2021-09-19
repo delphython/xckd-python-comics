@@ -141,33 +141,36 @@ def main():
 
     download_image(image_url, image_file_name, image_dir)
 
-    vk_upload_server_metadata = get_vk_upload_server_metadata(
-        vk_group_id, vk_token,
-        token_version
-    )
-    vk_upload_response_metadata = upload_image_to_vk(
-        vk_upload_server_metadata,
-        image_path,
-        vk_group_id,
-        vk_token,
-        token_version
-    )
-    vk_save_response_metadata = save_image_to_vk(
-        vk_upload_response_metadata,
-        vk_group_id,
-        vk_token,
-        token_version
-    )
+    try:
+        vk_upload_server_metadata = get_vk_upload_server_metadata(
+            vk_group_id, vk_token,
+            token_version
+        )
+        vk_upload_response_metadata = upload_image_to_vk(
+            vk_upload_server_metadata,
+            image_path,
+            vk_group_id,
+            vk_token,
+            token_version
+        )
+        vk_save_response_metadata = save_image_to_vk(
+            vk_upload_response_metadata,
+            vk_group_id,
+            vk_token,
+            token_version
+        )
 
-    publish_image_to_vk(
-        vk_save_response_metadata,
-        image_comment,
-        vk_group_id,
-        vk_token,
-        token_version
-    )
+        publish_image_to_vk(
+            vk_save_response_metadata,
+            image_comment,
+            vk_group_id,
+            vk_token,
+            token_version
+        )
 
-    os.remove(image_path)
+        os.remove(image_path)
+    finally:
+        os.remove(image_path)
 
 
 if __name__ == "__main__":
