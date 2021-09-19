@@ -74,13 +74,9 @@ def upload_image_to_vk(upload_url, image_path, vk_group_id,
     return response.json()
 
 
-def save_image_to_vk(upload_response_metadata, vk_group_id, token,
-                     token_version):
+def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
+                     vk_group_id, token, token_version):
     vk_save_image_url = "https://api.vk.com/method/photos.saveWallPhoto"
-
-    uploaded_server = upload_response_metadata["server"]
-    uploaded_image = upload_response_metadata["photo"]
-    uploaded_hash = upload_response_metadata["hash"]
 
     params = {
         "access_token": token,
@@ -154,8 +150,14 @@ def main():
             vk_token,
             token_version
         )
+        uploaded_server = vk_upload_response_metadata["server"]
+        uploaded_image = vk_upload_response_metadata["photo"]
+        uploaded_hash = vk_upload_response_metadata["hash"]
+
         vk_save_response_metadata = save_image_to_vk(
-            vk_upload_response_metadata,
+            uploaded_server,
+            uploaded_image,
+            uploaded_hash,
             vk_group_id,
             vk_token,
             token_version
