@@ -93,13 +93,11 @@ def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
     return response.json()["response"][0]
 
 
-def publish_image_to_vk(save_response_metadata, image_comment, vk_group_id,
-                        token, token_version):
+def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
+                        vk_group_id, token, token_version):
     vk_publish_image_url = "https://api.vk.com/method/wall.post"
     post_from_group = 1
 
-    vk_owner_id = save_response_metadata["owner_id"]
-    uploaded_image_id = save_response_metadata["id"]
     media_content = f"photo{vk_owner_id}_{uploaded_image_id}"
 
     params = {
@@ -162,16 +160,19 @@ def main():
             vk_token,
             token_version
         )
+        vk_owner_id = vk_save_response_metadata["owner_id"]
+        uploaded_image_id = vk_save_response_metadata["id"]
 
         publish_image_to_vk(
-            vk_save_response_metadata,
+            vk_owner_id,
+            uploaded_image_id,
             image_comment,
             vk_group_id,
             vk_token,
             token_version
         )
 
-        os.remove(image_path)
+        # os.remove(image_path)
     finally:
         os.remove(image_path)
 
