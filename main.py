@@ -52,12 +52,12 @@ def get_vk_error_exception(vk_metadata):
             .format(vk_error_code, vk_error_message))
 
 
-def get_vk_upload_server_metadata(vk_group_id, token, token_version):
+def get_vk_upload_server_metadata(vk_group_id, token, api_version):
     vk_api_url = "https://api.vk.com/method/photos.getWallUploadServer"
 
     params = {
       "access_token": token,
-      "v": token_version,
+      "v": api_version,
       "group_id": vk_group_id,
     }
 
@@ -68,7 +68,7 @@ def get_vk_upload_server_metadata(vk_group_id, token, token_version):
 
 
 def upload_image_to_vk(upload_url, image_path, vk_group_id,
-                       token, token_version):
+                       token, api_version):
 
     with open(image_path, "rb") as image_file:
         files = {
@@ -76,7 +76,7 @@ def upload_image_to_vk(upload_url, image_path, vk_group_id,
         }
         params = {
             "access_token": token,
-            "v": token_version,
+            "v": api_version,
             "group_id": vk_group_id,
         }
         response = requests.post(upload_url, files=files, params=params)
@@ -86,12 +86,12 @@ def upload_image_to_vk(upload_url, image_path, vk_group_id,
 
 
 def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
-                     vk_group_id, token, token_version):
+                     vk_group_id, token, api_version):
     vk_save_image_url = "https://api.vk.com/method/photos.saveWallPhoto"
 
     params = {
         "access_token": token,
-        "v": token_version,
+        "v": api_version,
         "server": uploaded_server,
         "photo": uploaded_image,
         "hash": uploaded_hash,
@@ -105,7 +105,7 @@ def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
 
 
 def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
-                        vk_group_id, token, token_version):
+                        vk_group_id, token, api_version):
     vk_publish_image_url = "https://api.vk.com/method/wall.post"
     post_from_group = 1
 
@@ -113,7 +113,7 @@ def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
 
     params = {
         "access_token": token,
-        "v": token_version,
+        "v": api_version,
         "attachments": media_content,
         "owner_id": f"-{vk_group_id}",
         "from_group": post_from_group,
