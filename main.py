@@ -44,13 +44,19 @@ def download_image(url, filename, image_dir, params=None):
         file.write(response.content)
 
 
-def get_vk_error_exception(vk_metadata):
-    vk_error_code = vk_metadata["error_code"]
-    vk_error_message = vk_metadata["error_msg"]
+def raise_vk_error_exception(vk_metadata):
+    if "error" in vk_metadata:
+        vk_error_metadata = vk_metadata["error"]
+        vk_error_code = vk_error_metadata["error_code"]
+        vk_error_message = vk_error_metadata["error_msg"]
+        error_message = ("Exit with error code:"
+                         " {} and error message: {}"
+                         .format(vk_error_code, vk_error_message))
 
-    return ("Exit with error code:"
-            " {} and error message: {}"
-            .format(vk_error_code, vk_error_message))
+        try:
+            raise requests.exceptions.HTTPError(error_message)
+        except requests.exceptions.HTTPError as error:
+            print(error)
 
 
 def get_vk_upload_server_metadata(vk_group_id, token, api_version):
@@ -64,8 +70,10 @@ def get_vk_upload_server_metadata(vk_group_id, token, api_version):
 
     response = requests.post(vk_api_url, params=params)
     response.raise_for_status()
+    vk_upload_server_metadata = response.json()
 
-    return response.json()
+    raise_vk_error_exception(vk_upload_server_metadata)
+    return vk_upload_server_metadata
 
 
 def upload_image_to_vk(upload_url, image_path, vk_group_id,
@@ -82,8 +90,11 @@ def upload_image_to_vk(upload_url, image_path, vk_group_id,
         }
         response = requests.post(upload_url, files=files, params=params)
     response.raise_for_status()
+    vk_upload_response_metadata = response.json()
 
-    return response.json()
+    raise_vk_error_exception(vk_upload_response_metadata)
+
+    return vk_upload_response_metadata
 
 
 def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
@@ -101,8 +112,11 @@ def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
 
     response = requests.post(vk_save_image_url, params=params)
     response.raise_for_status()
+    vk_save_response_metadata = response.json()["response"][0]
 
-    return response.json()["response"][0]
+    raise_vk_error_exception(vk_save_response_metadata)
+
+    return vk_save_response_metadata
 
 
 def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
@@ -123,24 +137,22 @@ def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
 
     response = requests.post(vk_publish_image_url, params=params)
     response.raise_for_status()
+    vk_publish_response_metadata = response.json()
 
-    return response.json()
+    raise_vk_error_exception(vk_publish_response_metadata)
+
+    return vk_publish_response_metadata
 
 
 def send_image_to_vk_group(vk_group_id, image_comment, image_path,
                            random_comic, vk_token, api_version):
+    logging.basicConfig(filename="comic.log", level=logging.INFO)
+
     vk_upload_server_metadata = get_vk_upload_server_metadata(
         vk_group_id, vk_token,
         api_version
     )
-    logging.basicConfig(filename="publish_comic.log", level=logging.INFO)
-
-    try:
-        upload_url = vk_upload_server_metadata["response"]["upload_url"]
-    except KeyError:
-        raise requests.exceptions.HTTPError(
-            get_vk_error_exception(vk_upload_server_metadata["error"])
-        )
+    upload_url = vk_upload_server_metadata["response"]["upload_url"]
 
     vk_upload_response_metadata = upload_image_to_vk(
         upload_url,
@@ -149,14 +161,9 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
         vk_token,
         api_version
     )
-    try:
-        uploaded_server = vk_upload_response_metadata["server"]
-        uploaded_image = vk_upload_response_metadata["photo"]
-        uploaded_hash = vk_upload_response_metadata["hash"]
-    except KeyError:
-        raise requests.exceptions.HTTPError(
-            get_vk_error_exception(vk_upload_server_metadata["error"])
-        )
+    uploaded_server = vk_upload_response_metadata["server"]
+    uploaded_image = vk_upload_response_metadata["photo"]
+    uploaded_hash = vk_upload_response_metadata["hash"]
 
     vk_save_response_metadata = save_image_to_vk(
         uploaded_server,
@@ -166,13 +173,8 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
         vk_token,
         api_version
     )
-    try:
-        vk_owner_id = vk_save_response_metadata["owner_id"]
-        uploaded_image_id = vk_save_response_metadata["id"]
-    except KeyError:
-        raise requests.exceptions.HTTPError(
-            get_vk_error_exception(vk_upload_server_metadata["error"])
-        )
+    vk_owner_id = vk_save_response_metadata["owner_id"]
+    uploaded_image_id = vk_save_response_metadata["id"]
 
     vk_publish_response_metadata = publish_image_to_vk(
         vk_owner_id,
@@ -182,15 +184,10 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
         vk_token,
         api_version
     )
-    try:
-        vk_post_id = vk_publish_response_metadata["response"]["post_id"]
-        logging.info("Comic #{} was published "
-                     "on VKontakte. Post id = {}."
-                     .format(random_comic, vk_post_id))
-    except KeyError:
-        raise requests.exceptions.HTTPError(
-            get_vk_error_exception(vk_upload_server_metadata["error"])
-        )
+    vk_post_id = vk_publish_response_metadata["response"]["post_id"]
+    logging.info("Comic #{} was published "
+                 "on VKontakte. Post id = {}."
+                 .format(random_comic, vk_post_id))
 
 
 def main():
