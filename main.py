@@ -133,6 +133,8 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
         vk_group_id, vk_token,
         api_version
     )
+    logging.basicConfig(filename="publish_comic.log", level=logging.INFO)
+
     try:
         upload_url = vk_upload_server_metadata["response"]["upload_url"]
     except KeyError:
