@@ -185,8 +185,8 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
     try:
         vk_post_id = vk_publish_response_metadata["response"]["post_id"]
         logging.info("Comic #{} was published "
-              "on VKontakte. Post id = {}."
-              .format(random_comic, vk_post_id))
+                     "on VKontakte. Post id = {}."
+                     .format(random_comic, vk_post_id))
     except KeyError:
         raise requests.exceptions.HTTPError(
             get_vk_error_exception(vk_upload_server_metadata["error"])
