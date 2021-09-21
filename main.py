@@ -185,9 +185,10 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
         api_version
     )
     vk_post_id = vk_publish_response_metadata["response"]["post_id"]
-    logging.info("Comic #{} was published "
-                 "on VKontakte. Post id = {}."
-                 .format(random_comic, vk_post_id))
+    logging.info(
+        f"Comic #{random_comic} was published on VKontakte."
+        f"Post id ={vk_post_id}."
+    )
 
 
 def main():
