@@ -56,9 +56,9 @@ def get_vk_upload_server_metadata(vk_group_id, token, api_version):
     vk_api_url = "https://api.vk.com/method/photos.getWallUploadServer"
 
     params = {
-      "access_token": token,
-      "v": api_version,
-      "group_id": vk_group_id,
+        "access_token": token,
+        "v": api_version,
+        "group_id": vk_group_id,
     }
 
     response = requests.post(vk_api_url, params=params)
