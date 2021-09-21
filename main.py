@@ -49,9 +49,8 @@ def raise_vk_error_exception(vk_metadata):
         vk_error_metadata = vk_metadata["error"]
         vk_error_code = vk_error_metadata["error_code"]
         vk_error_message = vk_error_metadata["error_msg"]
-        error_message = ("Exit with error code:"
-                         " {} and error message: {}"
-                         .format(vk_error_code, vk_error_message))
+        error_message = (f"Exit with error code: {vk_error_code}"
+                         f" and error message: {vk_error_message}")
 
         try:
             raise requests.exceptions.HTTPError(error_message)
