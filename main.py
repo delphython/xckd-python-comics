@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 def get_file_name(url):
     parsed_url = urlparse(url)
     path = unquote(parsed_url.path)
-    *arg, file_name = os.path.split(path)
+    _, file_name = os.path.split(path)
 
     return file_name
 
