@@ -74,13 +74,13 @@ def upload_image_to_vk(upload_url, image_path, vk_group_id,
         files = {
             "photo": image_file,
         }
-        params = {
-            "access_token": token,
-            "v": api_version,
-            "group_id": vk_group_id,
-        }
-        response = requests.post(upload_url, files=files, params=params)
-        response.raise_for_status()
+    params = {
+        "access_token": token,
+        "v": api_version,
+        "group_id": vk_group_id,
+    }
+    response = requests.post(upload_url, files=files, params=params)
+    response.raise_for_status()
 
     return response.json()
 
