@@ -70,9 +70,9 @@ def get_vk_upload_server_metadata(vk_group_id, token, token_version):
 def upload_image_to_vk(upload_url, image_path, vk_group_id,
                        token, token_version):
 
-    with open(image_path, 'rb') as image_file:
+    with open(image_path, "rb") as image_file:
         files = {
-            'photo': image_file,
+            "photo": image_file,
         }
         params = {
             "access_token": token,
