@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 from urllib.parse import urlparse, unquote
@@ -181,7 +182,7 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
     )
     try:
         vk_post_id = vk_publish_response_metadata["response"]["post_id"]
-        print("Comic #{} was published "
+        logging.info("Comic #{} was published "
               "on VKontakte. Post id = {}."
               .format(random_comic, vk_post_id))
     except KeyError:
