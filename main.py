@@ -52,17 +52,14 @@ def raise_vk_error_exception(vk_response):
         error_message = (f"Exit with error code: {vk_error_code}"
                          f" and error message: {vk_error_message}")
 
-        try:
-            raise requests.exceptions.HTTPError(error_message)
-        except requests.exceptions.HTTPError as error:
-            print(error)
+        raise requests.exceptions.HTTPError(error_message)
 
 
 def get_vk_upload_server(vk_group_id, token, api_version):
     vk_api_url = "https://api.vk.com/method/photos.getWallUploadServer"
 
     params = {
-        "access_token": token,
+        "access_token": token+"1",
         "v": api_version,
         "group_id": vk_group_id,
     }
@@ -77,7 +74,6 @@ def get_vk_upload_server(vk_group_id, token, api_version):
 
 def upload_image_to_vk(upload_url, image_path, vk_group_id,
                        token, api_version):
-
     with open(image_path, "rb") as image_file:
         files = {
             "photo": image_file,
@@ -88,6 +84,7 @@ def upload_image_to_vk(upload_url, image_path, vk_group_id,
             "group_id": vk_group_id,
         }
         response = requests.post(upload_url, files=files, params=params)
+
     response.raise_for_status()
     vk_upload_response = response.json()
 
