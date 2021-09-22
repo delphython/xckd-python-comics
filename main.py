@@ -59,7 +59,7 @@ def get_vk_upload_server(vk_group_id, token, api_version):
     vk_api_url = "https://api.vk.com/method/photos.getWallUploadServer"
 
     params = {
-        "access_token": token+"1",
+        "access_token": token,
         "v": api_version,
         "group_id": vk_group_id,
     }
