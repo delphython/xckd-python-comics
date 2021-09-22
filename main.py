@@ -21,13 +21,13 @@ def get_random_comic_number():
     response = requests.get(comic_url)
     response.raise_for_status()
 
-    comic_metadata = response.json()
-    last_comic_number = comic_metadata["num"]
+    comic_response = response.json()
+    last_comic_number = comic_response["num"]
 
     return random.randint(1, last_comic_number)
 
 
-def get_image_metadata(url, params=None):
+def get_image_url_response(url, params=None):
     response = requests.get(url, params)
     response.raise_for_status()
 
@@ -44,11 +44,11 @@ def download_image(url, filename, image_dir, params=None):
         file.write(response.content)
 
 
-def raise_vk_error_exception(vk_metadata):
-    if "error" in vk_metadata:
-        vk_error_metadata = vk_metadata["error"]
-        vk_error_code = vk_error_metadata["error_code"]
-        vk_error_message = vk_error_metadata["error_msg"]
+def raise_vk_error_exception(vk_response):
+    if "error" in vk_response:
+        vk_error_response = vk_response["error"]
+        vk_error_code = vk_error_response["error_code"]
+        vk_error_message = vk_error_response["error_msg"]
         error_message = (f"Exit with error code: {vk_error_code}"
                          f" and error message: {vk_error_message}")
 
@@ -58,7 +58,7 @@ def raise_vk_error_exception(vk_metadata):
             print(error)
 
 
-def get_vk_upload_server_metadata(vk_group_id, token, api_version):
+def get_vk_upload_server(vk_group_id, token, api_version):
     vk_api_url = "https://api.vk.com/method/photos.getWallUploadServer"
 
     params = {
@@ -69,10 +69,10 @@ def get_vk_upload_server_metadata(vk_group_id, token, api_version):
 
     response = requests.post(vk_api_url, params=params)
     response.raise_for_status()
-    vk_upload_server_metadata = response.json()
+    vk_upload_server_response = response.json()
 
-    raise_vk_error_exception(vk_upload_server_metadata)
-    return vk_upload_server_metadata
+    raise_vk_error_exception(vk_upload_server_response)
+    return vk_upload_server_response
 
 
 def upload_image_to_vk(upload_url, image_path, vk_group_id,
@@ -89,11 +89,11 @@ def upload_image_to_vk(upload_url, image_path, vk_group_id,
         }
         response = requests.post(upload_url, files=files, params=params)
     response.raise_for_status()
-    vk_upload_response_metadata = response.json()
+    vk_upload_response = response.json()
 
-    raise_vk_error_exception(vk_upload_response_metadata)
+    raise_vk_error_exception(vk_upload_response)
 
-    return vk_upload_response_metadata
+    return vk_upload_response
 
 
 def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
@@ -111,11 +111,11 @@ def save_image_to_vk(uploaded_server, uploaded_image, uploaded_hash,
 
     response = requests.post(vk_save_image_url, params=params)
     response.raise_for_status()
-    vk_save_response_metadata = response.json()["response"][0]
+    vk_save_response = response.json()["response"][0]
 
-    raise_vk_error_exception(vk_save_response_metadata)
+    raise_vk_error_exception(vk_save_response)
 
-    return vk_save_response_metadata
+    return vk_save_response
 
 
 def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
@@ -136,33 +136,33 @@ def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
 
     response = requests.post(vk_publish_image_url, params=params)
     response.raise_for_status()
-    vk_publish_response_metadata = response.json()
+    vk_publish_response = response.json()
 
-    raise_vk_error_exception(vk_publish_response_metadata)
+    raise_vk_error_exception(vk_publish_response)
 
-    return vk_publish_response_metadata
+    return vk_publish_response
 
 
 def send_image_to_vk_group(vk_group_id, image_comment, image_path,
                            random_comic, vk_token, api_version):
-    vk_upload_server_metadata = get_vk_upload_server_metadata(
+    vk_upload_server_response = get_vk_upload_server(
         vk_group_id, vk_token,
         api_version
     )
-    upload_url = vk_upload_server_metadata["response"]["upload_url"]
+    upload_url = vk_upload_server_response["response"]["upload_url"]
 
-    vk_upload_response_metadata = upload_image_to_vk(
+    vk_upload_response = upload_image_to_vk(
         upload_url,
         image_path,
         vk_group_id,
         vk_token,
         api_version
     )
-    uploaded_server = vk_upload_response_metadata["server"]
-    uploaded_image = vk_upload_response_metadata["photo"]
-    uploaded_hash = vk_upload_response_metadata["hash"]
+    uploaded_server = vk_upload_response["server"]
+    uploaded_image = vk_upload_response["photo"]
+    uploaded_hash = vk_upload_response["hash"]
 
-    vk_save_response_metadata = save_image_to_vk(
+    vk_save_response = save_image_to_vk(
         uploaded_server,
         uploaded_image,
         uploaded_hash,
@@ -170,10 +170,10 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
         vk_token,
         api_version
     )
-    vk_owner_id = vk_save_response_metadata["owner_id"]
-    uploaded_image_id = vk_save_response_metadata["id"]
+    vk_owner_id = vk_save_response["owner_id"]
+    uploaded_image_id = vk_save_response["id"]
 
-    vk_publish_response_metadata = publish_image_to_vk(
+    vk_publish_response = publish_image_to_vk(
         vk_owner_id,
         uploaded_image_id,
         image_comment,
@@ -181,7 +181,7 @@ def send_image_to_vk_group(vk_group_id, image_comment, image_path,
         vk_token,
         api_version
     )
-    vk_post_id = vk_publish_response_metadata["response"]["post_id"]
+    vk_post_id = vk_publish_response["response"]["post_id"]
     logging.info(
         f"Comic #{random_comic} was published on VKontakte."
         f"Post id ={vk_post_id}."
@@ -201,9 +201,9 @@ def main():
     random_comic = get_random_comic_number()
     random_comic_url = f"https://xkcd.com/{random_comic}/info.0.json"
 
-    image_metadata = get_image_metadata(random_comic_url)
-    image_url = image_metadata["img"]
-    image_comment = image_metadata["alt"]
+    image_url_repsonse = get_image_url_response(random_comic_url)
+    image_url = image_url_repsonse["img"]
+    image_comment = image_url_repsonse["alt"]
     image_file_name = get_file_name(image_url)
     image_dir = os.getcwd()
     image_path = os.path.join(image_dir, image_file_name)
