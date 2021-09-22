@@ -145,8 +145,6 @@ def publish_image_to_vk(vk_owner_id, uploaded_image_id, image_comment,
 
 def send_image_to_vk_group(vk_group_id, image_comment, image_path,
                            random_comic, vk_token, api_version):
-    logging.basicConfig(filename="comic.log", level=logging.INFO)
-
     vk_upload_server_metadata = get_vk_upload_server_metadata(
         vk_group_id, vk_token,
         api_version
@@ -194,6 +192,8 @@ def main():
     load_dotenv()
 
     api_version = "5.131"
+
+    logging.basicConfig(filename="comic.log", level=logging.INFO)
 
     vk_group_id = os.environ["VK_GROUP_ID"]
     vk_token = os.environ["VK_API_KEY"]
